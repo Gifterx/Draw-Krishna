@@ -245,7 +245,7 @@ goto(-150,-300)
 tur.color("white")
 tur.write ("ॐ श्री गणेशाय नमः" , font=("balloon",20,"normal"), align="left")
 goto(-150,-260)
-tur.write ("\tBy @CodeWithZaid" , font=("balloon",10,"normal"), align="left")
+tur.write ("\tBy @PyZaid" , font=("balloon",10,"normal"), align="left")
 
 
 
