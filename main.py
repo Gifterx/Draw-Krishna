@@ -243,9 +243,9 @@ tur.penup()
 
 goto(-150,-300)
 tur.color("white")
-tur.write ("Codaphics PVT LTD." , font=("balloon",20,"normal"), align="left")
+tur.write ("ॐ श्री गणेशाय नमः" , font=("balloon",20,"normal"), align="left")
 goto(-150,-260)
-tur.write ("\tHappy ganesh Chaturthi." , font=("balloon",10,"normal"), align="left")
+tur.write ("\tBy @CodeWithZaid" , font=("balloon",10,"normal"), align="left")
 
 
 
