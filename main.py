@@ -1,89 +1,79 @@
-import argparse
-import math
-from turtle import Screen, Turtle
-from typing import Optional
 
-from svgpathtools import svg2paths
+import cv2
+import turtle
+import numpy as np
+from matplotlib import pyplot as plt
+import time
 
-turtle = Turtle()
-screen = Screen()
-
-
-def parse_styles(attrs: list[dict]) -> list[dict]:
-    for dictionary in attrs:
-        try:
-            pairs = dictionary['style'].replace(' ', '')
-        except KeyError:
-            continue
-        pairs = pairs.rstrip(';').split(';')
-        for pair in pairs:
-            key, value = pair.split(':')
-            if value == 'none':
-                value = None
-            dictionary[key] = value
-    return attrs
+def find_closest(p):
+    if len(positions) > 0:
+        nodes = np.array(positions)
+        distances = np.sum((nodes - p) ** 2, axis=1)
+        i_min = np.argmin(distances)
+        return positions[i_min]
+    else:
+        return None
 
 
-def parse_paths(paths: list, quality: int = 8, offset: tuple[float, float] = (0, 0)) -> list[list]:
-    new_paths = []
-    for path in paths:
-        new_path = []
-        for subpaths in path.continuous_subpaths():
-            points = []
-            for segment in subpaths:
-                interp_num = math.ceil(segment.length() / quality)
-                positions = [x / interp_num for x in range(interp_num)]
-                points.extend([segment.point(position) for position in positions])
-            new_path.append([(point.real + offset[0], -point.imag - offset[1]) for point in points])
-        new_paths.append(new_path)
-    return new_paths
+def outline():
+    src_image = cv2.imread(image, 0)
+    blurred = cv2.GaussianBlur(src_image, (7, 7), 0)
+    th3 = cv2.adaptiveThreshold(blurred, maxValue=255, adaptiveMethod=cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
+                                thresholdType=cv2.THRESH_BINARY, blockSize=9, C=2)
+    return th3
 
+image = 'Jai-Shree-Ram-thumb.png'
+im = cv2.imread(image, 0)
+th3 = outline()
 
-def move_to(coords: tuple[float, float], draw: bool = True):
-    wasdown = turtle.isdown()
-    turtle.pen(pendown=draw)
-    turtle.goto(coords[0], coords[1])
-    turtle.pen(pendown=wasdown)
+plt.imshow(th3)
+plt.axis('off')
+plt.tight_layout()
+# plt.show()
 
+WIDTH = im.shape[1]
+HEIGHT = im.shape[0]
+print(WIDTH, HEIGHT)
 
-def draw_path(path, color: Optional[str] = None, fill: Optional[str] = None):
-    if color:
-        turtle.color(color)
-    for segment in path:
-        move_to(segment[0], False)
-        if fill:
-            turtle.color(fill)
-            turtle.begin_fill()
-        for point in segment[1:]:
-            move_to(point, True)
-        if fill:
-            turtle.end_fill()
+CUTOFF_LEN = ((WIDTH + HEIGHT) / 2) / 60  # 60 threshold value
+iH, iW = np.where(th3 == [0])
+iW = iW - WIDTH / 2
+iH = -1 * (iH - HEIGHT / 2)
+positions = [list(iwh) for iwh in zip(iW, iH)]
 
+# win = turtle.Screen()
+# win.bgcolor('black')
 
-def main(file_path: str, loop: bool = False, quality: int = 1, n: int = 0):  # pylint: disable=invalid-name
-    paths, attrs, svg_attrs = svg2paths(file_path, return_svg_attributes=True)  # type: ignore
-    attrs = parse_styles(attrs)
-    width, height = int(float(svg_attrs['width'])), int(float(svg_attrs['height']))
-    offset = (-width / 2, -height / 2)
-    paths = parse_paths(paths, quality, offset)
-    screen.tracer(n=n, delay=0)
-    screen.screensize(width, height)
-    while True:
-        turtle.reset()
-        turtle.hideturtle()
-        for path, attr in zip(paths, attrs):
-            draw_path(path, attr.get('stroke'), attr.get('fill'))
-        if not loop:
-            break
-    screen.update()
-    screen.mainloop()
+t = turtle.Turtle()
+t.color("black")
+t.shapesize(1)
+t.pencolor("gray30")
+t.speed(1)
 
+t.speed(0)
+turtle.tracer(0, 0)
+t.penup()
+t.goto(positions[0])
+t.pendown()
 
-if __name__ == '__main__':
-    parser = argparse.ArgumentParser()
-    parser.add_argument('path')
-    parser.add_argument('-l', '--loop', action='store_true')
-    parser.add_argument('-q', '--quality', type=int, default=1)
-    parser.add_argument('-n', type=int, default=0)
-    args = parser.parse_args()
-    main(args.path, args.loop, args.quality, args.n)
+time.sleep(3)
+
+p = positions[0]
+while (p):
+    p = find_closest(p)
+    if p:
+        current_pos = np.asarray(t.pos())
+        new_pos = np.asarray(p)
+        length = np.linalg.norm(new_pos - current_pos)
+        if length < CUTOFF_LEN:
+            t.goto(p)
+            turtle.update()
+        else:
+            t.penup()
+            t.goto(p)
+            t.pendown()
+        positions.remove(p)
+    else:
+        p = None
+
+turtle.done()
