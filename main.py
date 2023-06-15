@@ -218,16 +218,6 @@ t1.forward(260)
 t1.end_fill()
 #At this point, we have completed drawing Radhe Krishna
 
-t1.pu()
-t1.right(100)
-t1.forward(115)
-t1.right(85)
-t1.forward(420)
-
-#Lets also write their holy name in our drawing 
-t1.color("#00a606")
-t1.write("Radha Krishna", font=("Harlow Solid Italic",50, "bold"))
-
 t1.hideturtle()
 
 turtle.done()
