@@ -1,233 +1,97 @@
-import turtle
+import turtle as tu
+import cv2
+from svgpathtools import svg2paths2
+from svg.path import parse_path
+from tqdm import tqdm
+class sketch_from_svg:
 
-#keeping the background color dark blue
-turtle.bgcolor('#ffc233')
+    def __init__(self,path,scale=30,x_offset=350,y_offset=350):
 
-#Defining title of program
-turtle.title("Radhe Krishna")
+        self.path = path
+        self.x_offset = x_offset
+        self.y_offset = y_offset
+        self.scale = scale
 
-#Creating turtle screen
-screen= turtle.Screen()
-#Defining height and width of screen
-screen.setup(650,580)
+    def hex_to_rgb(self,string):
+        strlen = len(string)
+        if string.startswith('#'):
+            if strlen == 7:
+                r = string[1:3]
+                g = string[3:5]
+                b = string[5:7]
+            elif strlen == 4:
+                r = string[1:2]*2
+                g = string[2:3]*2
+                b = string[3:4]*2
+        elif strlen == 3:
+                r = string[0:1]*2
+                g = string[1:2]*2
+                b = string[2:3]*2
+        else:
+            r = string[0:2]
+            g = string[2:4]
+            b = string[4:6]
+        
+        return int(r,16)/255,int(g,16)/255, int(b,16)/255
 
-t1 = turtle.Turtle()
+    
 
-#keeping the fasted speed for now, you can keep the speed as needed
-#'fastest' : 0
-#'fast' : 10
-#'normal' : 6
-#'slow' : 3
-#'slowest' : 1
+    def load_svg(self):
+        print('loading data')
+        paths,attributes,svg_att = svg2paths2(self.path)
+        h = svg_att["height"]
+        w = svg_att['width']
+        self.height = int(h[:h.find('.')])
+        self.width = int(w[:w.find('.')])
 
-t1.speed(4)
+        res = []
+        for i in tqdm(attributes):
+            path = parse_path(i['d'])
+            co = i['fill']
+            #print(co)
+            col = self.hex_to_rgb(co)
+            #print(col)
+            n = len(list(path))+2       
+            pts = [((int((p.real/self.width)*self.scale))-self.x_offset, (int((p.imag/self.height)*self.scale))-self.y_offset) for p in (path.point(i/n) for i in range(0,n+1))]
+            res.append((pts,col))
+            #res.append(pts)
+        print('svg data loaded')
+        return res
 
-#Let's move down and go the position from where we will start to draw
-t1.right(90)
-t1.pu()
-t1.forward(180)
-t1.left(90)
-#Now, the turtle is pointing positive x-axis
-
-#Let's keep the pen down and start to draw the base
-t1.pd()
-#Here we have dipped our turtle brush in a shade of blue color
-t1.fillcolor("#ff99d1")
-t1.begin_fill()
-t1.forward(400)
-t1.right(90)
-t1.forward(100)
-t1.right(90)
-t1.forward(800)
-t1.right(90)
-t1.forward(100)
-t1.right(90)
-t1.forward(400)
-t1.end_fill()
-#Now, we have drawn the base which is rectangular in shape
-#end_fill will fill blue color (selected above), in the shape formed by turtle
-
-#Now, we will start to draw moon,I have selected a very light shade of blue to color moon
-t1.fillcolor("#CDEEF1")
-t1.begin_fill()
-t1.forward(160)
-t1.left(40)
-#this method will draw the moon's border  
-t1.circle(250,280)
-t1.left(40)
-t1.forward(160)
-t1.end_fill()
-#Now, we have drawn the moon as well as filled color in it
-
-#Now, we will start drawing Radha Krishna
-#We will draw Radha on our right side and Krishna on left side
-#We will start with Radha
-t1.fillcolor("#012427")
-t1.begin_fill()
-#We will start with the duppata
-t1.forward(160)
-t1.left(130)
-t1.circle(-300,30)
-t1.forward(95)
-#This will draw the shoulder
-t1.circle(50,40)
-t1.right(40)
-#This will draw the head
-t1.forward(43)
-t1.circle(80,25)
-t1.circle(50,30)
-t1.left(10)
-t1.circle(35,28)
-#Now, we have completed drawing Radha
-
-#Now, let's draw krishna's turban
-t1.right(160)
-t1.circle(10,100)
-t1.right(100)
-t1.circle(10,80)
-t1.forward(20)
-t1.left(80)
-t1.circle(100,15)
-t1.right(90)
-t1.forward(6)
-t1.left(65)
-t1.circle(60,55)
-
-#Following code will draw Krishna's morpankh
-t1.right(160)
-t1.circle(20,100)
-t1.forward(10)
-t1.circle(-20,25)
-t1.left(170)
-t1.circle(-20,40)
-t1.forward(10)
-t1.circle(20,80)
-#morpankh done
-
-#We will continue to draw rest part of turban
-t1.right(135)
-t1.circle(60,15)
-t1.left(70)
-t1.forward(6)
-
-t1.right(110)
-t1.forward(9)
-
-t1.left(80)
-t1.circle(70,24)
-
-t1.right(60)
-t1.circle(65,30)
-t1.circle(-5,110)
-
-#Below lines of code will draw the right hand of Krishna
-t1.circle(5,120)
-t1.right(90)
-t1.circle(5,60)
-t1.forward(10)
-t1.circle(10,5)
-t1.right(80)
-t1.forward(15)
-t1.circle(-5,160)
-#Now, we will draw the first open finger of right hand
-t1.forward(6)
-t1.circle(2,180)
-t1.forward(6)
-t1.circle(20,30)
-
-#Below lines will draw fingers holding bansuri
-t1.right(140)
-t1.circle(3,150)
-t1.right(110)
-t1.circle(4,80)
-t1.forward(2)
-t1.right(100)
-
-#Here, we will draw second open finger of krishna
-t1.forward(6)
-t1.right(60)
-t1.forward(9)
-t1.circle(2,180)
-t1.forward(10)
-t1.left(30)
-t1.forward(15)
-
-#We will now start to draw bansuri
-t1.right(85)
-t1.forward(40)
-t1.right(60)
-t1.circle(5,310)
-t1.right(80)
-t1.forward(3)
-t1.right(90)
-
-#dor on bansuri
-t1.forward(42)
-t1.right(30)
-t1.forward(10)
-t1.left(90)
-t1.circle(20,60)
-t1.left(95)
-t1.forward(12)
-t1.right(29)
-t1.forward(42)
-
-#We will draw the rest part of bansuri
-t1.right(90)
-t1.forward(34)
-t1.right(85)
-
-#left hand of Krishna
-t1.forward(2)
-t1.circle(60,25)
-
-#Now, we will draw Krishna's duppata
-t1.right(80)
-t1.circle(10,40)
-t1.forward(45)
-t1.left(10)
-t1.forward(130)
-
-#Below lines will draw the plates of duppata
-t1.left(90)
-t1.forward(20)
-t1.right(90)
-t1.forward(10)
-t1.left(90)
-t1.forward(10)
-t1.right(90)
-t1.forward(5)
-t1.left(90)
-t1.forward(25)
-
-#This will complete drawing duppata
-t1.left(100)
-t1.forward(120)
-
-t1.right(175)
-t1.circle(50,50)
-
-#Now, we will tilt turtle towards required direction and draw Krishna's dhoti
-t1.right(80)
-t1.circle(110,15)
-t1.forward(75)
-
-#The turtle will now reach to the rectangular base we had drawn in the beginning
-t1.left(97)
-t1.forward(260)
-t1.end_fill()
-#At this point, we have completed drawing Radhe Krishna
+    def move_to(self,x, y):
+        self.pen.up()
+        self.pen.goto(x,y)
+        self.pen.down()
 
 
-t1.pu()
-t1.right(90)
-t1.forward(100)
-t1.right(90)
-t1.forward(450)
+    def draw(self,retain=True):
+        coordinates = self.load_svg()
+        self.pen = tu.Turtle()
+        self.pen.speed(0)
+        for path_col in coordinates:
+            f = 1
+            self.pen.color('black')
+            #print(path_col)
+            path = path_col[0]
+            #print(path_col)
+            col = path_col[1]
+            #print(col)
+            self.pen.color(col)
+            self.pen.begin_fill()
+            next = 0
+            for coord in path:
+                #for coord in path_col:
+                x,y = coord
+                y *= -1
+                #print(x,y)
+                if f:
+                    self.move_to(x, y)
+                    f=0
+                else:
+                    self.pen.goto(x,y)
+            self.pen.end_fill()
 
-#Lets also write their holy name in our drawing 
-t1.color("#00a606")
-t1.write("Radha Krishna - @PyZaid", font=("Script",45, "bold"))
-t1.hideturtle()
-
-turtle.done()
+        if retain == True:
+            tu.done()
+pen= sketch_from_svg('hanumanji.svg',scale=70)  
+pen.draw()
