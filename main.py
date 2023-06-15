@@ -56,7 +56,7 @@ t.penup()
 t.goto(positions[0])
 t.pendown()
 
-time.sleep(0.1)
+time.sleep(3)
 
 p = positions[0]
 while (p):
