@@ -220,14 +220,14 @@ t1.end_fill()
 
 
 t1.pu()
-t1.right(100)
-t1.forward(115)
-t1.right(85)
+t1.right(90)
+t1.forward(100)
+t1.right(90)
 t1.forward(450)
 
 #Lets also write their holy name in our drawing 
 t1.color("#00a606")
-t1.write("Radha Krishna - Preetam ", font=("Harlow Solid Italic",45, "bold"))
+t1.write("Radha Krishna - @PyZaid", font=("Script",45, "bold"))
 t1.hideturtle()
 
 turtle.done()
