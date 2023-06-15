@@ -1,102 +1,60 @@
+import turtle
 
-import turtle as tu
-from svgpathtools import svg2paths2
-from svg.path import parse_path
-from tqdm import tqdm
+screen = turtle.Screen()
+screen.setup(500, 500)
+doge = turtle.Turtle()
+doge.speed(2)
 
-class sketch_from_svg:
+doge.begin_fill()
+doge.color("lightgray")
+doge.circle(100)
+doge.end_fill()
 
-    def __init__(self,path,scale=30,x_offset=350,y_offset=350):
+doge.penup()
+doge.goto(-30, 50)
+doge.pendown()
+doge.begin_fill()
+doge.color("white")
+doge.circle(20)
+doge.end_fill()
 
-        self.path = path
-        self.x_offset = x_offset
-        self.y_offset = y_offset
-        self.scale = scale
+doge.penup()
+doge.goto(30, 50)
+doge.pendown()
+doge.begin_fill()
+doge.color("white")
+doge.circle(20)
+doge.end_fill()
 
-    def hex_to_rgb(self,string):
-        strlen = len(string)
+doge.penup()
+doge.goto(0, 20)
+doge.pendown()
+doge.begin_fill()
+doge.color("black")
+doge.circle(10)
+doge.end_fill()
 
-        if string.startswith('#'):
-            if strlen == 7:
-                r = string[1:3]
-                g = string[3:5]
-                b = string[5:7]
-            elif strlen == 4:
-                r = string[1:2]*2
-                g = string[2:3]*2
-                b = string[3:4]*2
-        elif strlen == 3:
-                r = string[0:1]*2
-                g = string[1:2]*2
-                b = string[2:3]*2
-        else:
-            r = string[0:2]
-            g = string[2:4]
-            b = string[4:6]
-        
-        return int(r,16)/255,int(g,16)/255, int(b,16)/255
+doge.penup()
+doge.goto(-30, -30)
+doge.pendown()
+doge.circle(50, 180)
 
-    def load_svg(self):
-        print('Loading Data - Please Wait Few Seconds')
-        paths,attributes,svg_att = svg2paths2(self.path)
-        h = svg_att["height"]
-        w = svg_att['width']
-        self.height = int(h[:h.find('.')])
-        self.width = int(w[:w.find('.')])
+doge.penup()
+doge.goto(-100, 120)
+doge.pendown()
+doge.begin_fill()
+doge.color("lightgray")
+doge.circle(30)
+doge.end_fill()
 
-        res = []
-        for i in tqdm(attributes):
-            path = parse_path(i['d'])
-            co = i['fill']
-            col = self.hex_to_rgb(co)
+doge.penup()
+doge.goto(100, 120)
+doge.pendown()
+doge.begin_fill()
+doge.color("lightgray")
+doge.circle(30)
+doge.end_fill()
 
-            n = len(list(path))+2       
-            pts = [((int((p.real/self.width)*self.scale))-self.x_offset, (int((p.imag/self.height)*self.scale))-self.y_offset) for p in (path.point(i/n) for i in range(0,n+1))]
-            res.append((pts,col))
-            tu.title("Made By PyZaid")
+doge.hideturtle()
+screen.exitonclick()
 
-        print('SVG Data Loaded')
-        return res
-
-    def move_to(self,x, y):
-        self.pen.up()
-        self.pen.goto(x,y)
-        self.pen.down()
-
-    def draw(self,retain=True):
-        coordinates = self.load_svg()
-        self.pen = tu.Turtle()
-        self.pen.speed(0)
-        for path_col in coordinates:
-            f = 1
-            self.pen.color('black')
-
-            path = path_col[0]
-            col = path_col[1]
-
-            self.pen.color(col)
-            self.pen.begin_fill()
-
-            for coord in path:
-                x,y = coord
-                y *= -1
-
-                if f:
-                    self.move_to(x, y)
-                    f=0
-                else:
-                    self.pen.goto(x,y)
-            self.pen.end_fill()
-            writesomething()
-
-        if retain == True:
-            tu.done()
-
-def writesomething():
-    tu.goto(250,100)
-    tu.write("@PyZaid",font=("italian", "30", "bold"))
-    tu.goto(210,50)
-    tu.write("🙏 Jay Shree Ram 🙏",font=("italian", "30", "bold"))
-
-pen= sketch_from_svg('images17.svg',scale=70)
-pen.draw()
