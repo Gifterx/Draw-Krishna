@@ -48,7 +48,7 @@ def parse_path_commands(path_data):
                 commands.append((current_command, command_data))
                 command_data = []
             current_command = char
-        elif char.isdigit() or char in ('.', '-'):
+        elif char.isdigit() or char in ('.'):
             command_data.append(float(char))
 
     if current_command:
