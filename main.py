@@ -226,7 +226,7 @@ t1.forward(420)
 
 #Lets also write their holy name in our drawing 
 t1.color("#00a606")
-t1.write("Radha Krishna - @PyZaid ", font=("Harlow Solid Italic",45, "bold"))
+t1.write("Radha Krishna", font=("Harlow Solid Italic",45, "bold"))
 
 t1.hideturtle()
 
