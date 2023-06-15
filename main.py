@@ -53,7 +53,7 @@ class sketch_from_svg:
             n = len(list(path))+2       
             pts = [((int((p.real/self.width)*self.scale))-self.x_offset, (int((p.imag/self.height)*self.scale))-self.y_offset) for p in (path.point(i/n) for i in range(0,n+1))]
             res.append((pts,col))
-            tu.title("Made By CodedWithAjay")
+            tu.title("Made By PyZaid")
 
         print('SVG Data Loaded')
         return res
