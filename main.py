@@ -1,101 +1,27 @@
 import turtle
 
-screen = turtle.Screen()
-screen.setup(500, 500)
-hanuman = turtle.Turtle()
-hanuman.speed(2)
+# Load the image
+image_path = "images.png"
 
-# Draw face
-hanuman.penup()
-hanuman.goto(0, -100)
-hanuman.pendown()
-hanuman.begin_fill()
-hanuman.color("orange")
-hanuman.circle(100)
-hanuman.end_fill()
+# Register the image as a turtle shape
+turtle.register_shape(image_path)
 
-# Draw eyes
-hanuman.penup()
-hanuman.goto(-40, 0)
-hanuman.pendown()
-hanuman.begin_fill()
-hanuman.color("white")
-hanuman.circle(20)
-hanuman.end_fill()
+# Create a turtle object
+image_turtle = turtle.Turtle()
 
-hanuman.penup()
-hanuman.goto(40, 0)
-hanuman.pendown()
-hanuman.begin_fill()
-hanuman.color("white")
-hanuman.circle(20)
-hanuman.end_fill()
+# Set the turtle shape to the registered image
+image_turtle.shape(image_path)
 
-# Draw mouth
-hanuman.penup()
-hanuman.goto(-40, -40)
-hanuman.pendown()
-hanuman.width(3)
-hanuman.color("black")
-hanuman.right(90)
-hanuman.circle(40, 180)
+# Stretch the image
+stretch_factor_x = 2  # Adjust as desired
+stretch_factor_y = 1  # Adjust as desired
+image_turtle.shapesize(stretch_factor_x, stretch_factor_y)
 
-# Draw crown
-hanuman.penup()
-hanuman.goto(0, 50)
-hanuman.pendown()
-hanuman.width(5)
-hanuman.color("red")
-hanuman.goto(-40, 80)
-hanuman.goto(-80, 120)
-hanuman.goto(-20, 100)
-hanuman.goto(40, 80)
-hanuman.goto(80, 120)
-hanuman.goto(20, 100)
-hanuman.goto(0, 50)
+# Move the turtle to the desired position
+image_turtle.goto(-100, 100)  # Adjust the coordinates as desired
 
-# Draw body
-hanuman.penup()
-hanuman.goto(-60, -180)
-hanuman.pendown()
-hanuman.begin_fill()
-hanuman.color("lightblue")
-hanuman.circle(80)
-hanuman.end_fill()
+# Hide the turtle and keep the image displayed
+image_turtle.hideturtle()
 
-# Draw arms
-hanuman.penup()
-hanuman.goto(-100, -100)
-hanuman.pendown()
-hanuman.width(10)
-hanuman.color("brown")
-hanuman.goto(-160, -80)
+turtle.done()
 
-hanuman.penup()
-hanuman.goto(100, -100)
-hanuman.pendown()
-hanuman.width(10)
-hanuman.color("brown")
-hanuman.goto(160, -80)
-
-# Draw tail
-hanuman.penup()
-hanuman.goto(-70, -260)
-hanuman.pendown()
-hanuman.width(8)
-hanuman.color("brown")
-hanuman.goto(-80, -320)
-hanuman.goto(-40, -350)
-hanuman.goto(0, -330)
-
-hanuman.penup()
-hanuman.goto(70, -260)
-hanuman.pendown()
-hanuman.width(8)
-hanuman.color("brown")
-hanuman.goto(80, -320)
-hanuman.goto(40, -350)
-hanuman.goto(0, -330)
-
-hanuman.hideturtle()
-screen.exitonclick()
