@@ -1,27 +1,60 @@
 import turtle
+import xml.etree.ElementTree as ET
 
-# Load the image
-image_path = "images19.png"
+def draw_svg(svg_file):
+    # Create a turtle instance
+    screen = turtle.Screen()
+    t = turtle.Turtle()
 
-# Register the image as a turtle shape
-turtle.register_shape(image_path)
+    # Parse the SVG file
+    tree = ET.parse(svg_file)
+    root = tree.getroot()
 
-# Create a turtle object
-image_turtle = turtle.Turtle()
+    # Set initial position and color
+    t.penup()
+    t.goto(0, 0)
+    t.pendown()
+    t.pensize(2)
+    t.speed(3)
 
-# Set the turtle shape to the registered image
-image_turtle.shape(image_path)
+    # Iterate through SVG elements
+    for element in root.iter():
+        if element.tag == '{http://www.w3.org/2000/svg}path':
+            # Handle path commands
+            path_data = element.get('d')
+            commands = parse_path_commands(path_data)
 
-# Stretch the image
-stretch_factor_x = 2  # Adjust as desired
-stretch_factor_y = 1  # Adjust as desired
-image_turtle.shapesize(stretch_factor_x, stretch_factor_y)
+            for command in commands:
+                if command[0] == 'M':
+                    x, y = command[1:]
+                    t.penup()
+                    t.goto(x, -y)
+                    t.pendown()
+                elif command[0] == 'L':
+                    x, y = command[1:]
+                    t.goto(x, -y)
 
-# Move the turtle to the desired position
-image_turtle.goto(-100, 100)  # Adjust the coordinates as desired
+    # Close the turtle graphics
+    screen.exitonclick()
 
-# Hide the turtle and keep the image displayed
-image_turtle.hideturtle()
+def parse_path_commands(path_data):
+    commands = []
+    current_command = ''
+    command_data = []
 
-turtle.done()
+    for char in path_data:
+        if char.isalpha():
+            if current_command:
+                commands.append((current_command, command_data))
+                command_data = []
+            current_command = char
+        elif char.isdigit() or char in ('.', '-'):
+            command_data.append(float(char))
 
+    if current_command:
+        commands.append((current_command, command_data))
+
+    return commands
+
+# Usage
+draw_svg('path_to_your_svg_file.svg')
