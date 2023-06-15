@@ -1,7 +1,7 @@
 import turtle
 
 # Load the image
-image_path = "images.png"
+image_path = "images19.png"
 
 # Register the image as a turtle shape
 turtle.register_shape(image_path)
