@@ -57,4 +57,4 @@ def parse_path_commands(path_data):
     return commands
 
 # Usage
-draw_svg('path_to_your_svg_file.svg')
+draw_svg('imagebyzaid.svg')
