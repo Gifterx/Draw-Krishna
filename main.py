@@ -98,5 +98,5 @@ def writesomething():
     tu.goto(210,50)
     tu.write("🙏 Jay Shree Ram 🙏",font=("italian", "30", "bold"))
 
-pen= sketch_from_svg('images (19).svg',scale=70)
+pen= sketch_from_svg('images19.svg',scale=70)
 pen.draw()
